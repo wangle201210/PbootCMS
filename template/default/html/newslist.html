@@ -1,38 +1,64 @@
 {include file=comm/head.html}
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css">
 
-{include file=comm/top.html}
+<!-- 主体内容 -->
+<div class="container">
 
-<div class="container pages">    
+    <!-- 面包屑 -->
+    <div class="breadcrumb">
+        {pboot:position separator='<span class="sep">&gt;</span>'}
+    </div>
 
-  	 {include file=comm/position.html}
-  	 
-  	 {include file=comm/sortnav.html}
+    <div class="page-content">
 
-	 <!-- 列表内容 -->
-     <ul>
-        {pboot:list num=10 order=date}
-        	<li class="lh-3 border-bottom-dashed">
-                <i class="fa fa-gg"></i>
-                <a href="[list:link]">
-                	<span class="d-none d-md-inline">[list:title lencn=30]</span><!-- PC端 -->
-                	<span class="d-inline d-md-none">[list:title lencn=11]</span><!-- 移动端 -->
-                	{pboot:if([list:istop]==1)}
-                		<span class="badge badge-danger">置顶</span>
-                	{/pboot:if}
-                	{pboot:if([list:isrecommend]==1)}
-                		<span class="badge badge-warning">推荐</span>
-                	{/pboot:if}
-                	{pboot:if([list:isheadline]==1)}
-                		<span class="badge badge-info">头条</span>
-                	{/pboot:if}
-                	<span class="float-right">[list:date style=Y-m-d]</span>
-                </a>
-            </li>
-        {/pboot:list}
-    </ul>
-    
-	{include file=comm/page.html}
- 	
+        <!-- 左侧子栏目导航 -->
+        <aside class="sidebar">
+        	{pboot:sort scode={sort:tcode}}
+            <div class="sidebar-title">[sort:name]</div>
+            {/pboot:sort}
+            <div class="sidebar-menu">
+                {pboot:nav num=20 parent={sort:tcode}}
+                <a href="[nav:link]" {pboot:if('[nav:scode]'=='{sort:scode}')}class="active"{/pboot:if}>[nav:name]</a>
+                {pboot:if([nav:soncount]>0)}
+                <div class="sidebar-sub">
+                    {pboot:2nav parent=[nav:scode]}
+                    <a href="[2nav:link]" {pboot:2if('[2nav:scode]'=='{sort:scode}')}class="active"{/pboot:2if}>[2nav:name]</a>
+                    {/pboot:2nav}
+                </div>
+                {/pboot:if}
+                {/pboot:nav}
+            </div>
+        </aside>
+
+        <!-- 右侧文章列表 -->
+        <div class="content-area">
+            <div class="article-list">
+                <div class="article-list-header">{sort:name}</div>
+                <div class="article-list-body">
+                	{pboot:list num=10 order=date}
+                    <a href="[list:link]" class="article-item">
+                        <span class="article-item-title">[list:title]</span>
+                        <span class="article-item-date">[list:date style=Y-m-d]</span>
+                    </a>
+                    {/pboot:list}
+                </div>
+            </div>
+
+            <!-- 分页 -->
+            {pboot:if({page:rows}>0)}
+            <div class="pagination">
+            	<a href="{page:index}" class="page-item">首页</a>
+            	<a href="{page:pre}" class="page-item">上一页</a>
+              	{page:numbar}
+              	<a href="{page:next}" class="page-item">下一页</a>
+              	<a href="{page:last}" class="page-item">尾页</a>
+            </div>
+            {else}
+            <div style="text-align:center;padding:30px;color:#999;">暂无数据</div>
+            {/pboot:if}
+        </div>
+
+    </div>
 </div>
 
 {include file=comm/foot.html}

@@ -1,140 +1,187 @@
 {include file=comm/head.html}
 
-<!-- 幻灯片 -->
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-    	{pboot:slide num=5 gid=1}
-        	<div class="swiper-slide">
-            {pboot:if([slide:link] != '')}
-              <a href="[slide:link]">
-                <img src="[slide:src]" class="d-block w-100 slideshow" >
-              </a>
-            {else}
-              <img src="[slide:src]" class="d-block w-100 slideshow" >
-            {/pboot:if}
-        		<div class="container">
-			    	<div class="position-absolute text-light" style="top:30%;">
-						<h1 class="fs-20 fs-sm-32 wow slideInUp">[slide:title]</h1>
-					 	<h4 class="fs-14 fs-sm-20 wow slideInUp">[slide:subtitle]</h4>
-					</div>
-			    </div>
-        	</div>
-        {/pboot:slide} 
-    </div>
-    <div class="swiper-button-prev d-none d-md-block"></div><!--左箭头-->
-    <div class="swiper-button-next d-none d-md-block"></div><!--右箭头-->
-    <div class="swiper-pagination"></div>
-</div>
+<!-- 主体内容 -->
+<main class="container main-content">
 
-<!--产品推荐-->
-<div class="bg-white py-5">
-    <div class="container">
-    
-      {pboot:sort scode=5}
-      	<div class="text-center fs-26 fs-sm-28 text-success wow fadeInDown">[sort:name]</div>
-      	<div class="text-center fs-14 fs-sm-16 mb-4 text-secondary wow fadeInUp" data-wow-delay="1s">- [sort:subname] -</div>
-      {/pboot:sort}
-      
-      <div class="row">
-       {pboot:list scode=5 num=4 order=date}
-        <div class="col-12 col-sm-6 col-lg-3 wow zoomIn" data-wow-delay="[list:i]00ms" data-wow-duration="1s">
-              <div class="card">
-                  <div class="card-img-150"><a href="[list:link]"><img class="card-img-top" src="[list:ico]" alt="[list:title]"></a></div>
-                  <div class="card-body">
-                    <h5 class="card-title"><a href="[list:link]">[list:title lencn=12]</a></h5>
-                    <p class="card-text">
-	                    {pboot:if([list:istop]==1)}
-	                		<span class="badge badge-danger">置顶</span>
-	                	{/pboot:if}
-	                	{pboot:if([list:isrecommend]==1)}
-	                		<span class="badge badge-warning">推荐</span>
-	                	{/pboot:if}
-	                	{pboot:if([list:isheadline]==1)}
-	                		<span class="badge badge-info">头条</span>
-	                	{/pboot:if}
-	                	[list:content drophtml=1 dropblank=1 len=50]
-                	</p>
-                  </div>
-               </div>
-         </div>
-        {/pboot:list}
-      </div>
-	  {pboot:sort scode=5}
-			<div class="text-center mt-4 wow fadeInDown" data-wow-delay="1s"><h4><a href="[sort:link]" class="text-secondary fs-14 fs-sm-16">查看更多</a></h4></div>
-	  {/pboot:sort}
-    </div>
-</div>
-
-<!-- 关于我们 -->
-<div class="bg-light py-5">
-    <div class="container">
-      {pboot:sort scode=1}
-      	<div class="text-center fs-26 fs-sm-28 text-info wow fadeInDown">[sort:name]</div>
-      	<div class="text-center fs-14 fs-sm-16 mb-4 text-secondary wow fadeInUp" data-wow-delay="1s">- [sort:subname] -</div>
-      {/pboot:sort}
-      
-      {pboot:content id=1}
-      	<div class="row text-secondary mb-5 px-3 lh-2 wow fadeInDown" data-wow-delay="500ms" style="text-indent:30px;">
-            [content:content drophtml=1 dropblank=1 len=442 more='']
-      	</div>
-     	<div class="text-center wow fadeInDown" data-wow-delay="1s"><h4><a href="[content:link]" class="text-secondary fs-14 fs-sm-16">查看更多</a></h4></div>
-      {/pboot:content}
-    </div>
-</div>
-
-<!-- 新闻动态 -->
-<div class="bg-white py-5">
-    <div class="container">
-      {pboot:sort scode=2}
-      	<div class="text-center fs-26 fs-sm-28 text-warning wow fadeInDown">[sort:name]</div>
-      	<div class="text-center fs-14 fs-sm-16 mb-5 text-secondary wow fadeInUp" data-wow-delay="1s">- [sort:subname] -</div>
-      {/pboot:sort}
-      
-      <div class="row">
-      	{pboot:list scode=2 num=4 order=date}
-            <div class="col-12 col-lg-6 mb-3 wow fadeInUp" data-wow-delay="500ms">
-                <div class="media mb-3">
-                  <div class="media-body">
-                     <h5><a href="[list:link]" title="[list:title]">[list:title lencn=20]</a></h5>
-                     <p><a href="[list:link]" class="text-secondary lh-2">[list:content drophtml=1 dropblank=1 lencn=60] [list:date style=Y-m-d]</a></p>
-                  </div>
+    <!-- 第一排：轮播图 + 新闻资讯 -->
+    <div class="row-1">
+        <div class="carousel" id="carousel">
+        	{pboot:slide num=5 gid=1}
+            <div class="carousel-slide {pboot:if([slide:i]==1)}active{/pboot:if}">
+                <img src="[slide:src]" alt="[slide:title]">
+                <div class="carousel-text">
+                    <h2>[slide:title]</h2>
+                    <p>[slide:subtitle]</p>
                 </div>
             </div>
-        {/pboot:list}
-      </div>
-	  {pboot:sort scode=2}
-		<div class="text-center wow fadeInDown" data-wow-delay="1s"><h4><a href="[sort:link]" class="text-secondary fs-14 fs-sm-16">查看更多</a></h4></div>
-	  {/pboot:sort}
+            {/pboot:slide}
+            <div class="carousel-arrows">
+                <button onclick="changeSlide(-1)">&#8249;</button>
+                <button onclick="changeSlide(1)">&#8250;</button>
+            </div>
+            <div class="carousel-dots">
+            	{pboot:slide num=5 gid=1}
+                <span {pboot:if([slide:i]==1)}class="active"{/pboot:if} onclick="goToSlide([slide:i]-1)"></span>
+                {/pboot:slide}
+            </div>
+        </div>
+
+        <div class="section-box news-tabs-container">
+            <div class="tabs-header">
+                <div class="tab-btn active" onclick="switchTab(0)">工作动态</div>
+                <div class="tab-btn" onclick="switchTab(1)">政策资讯</div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-0">
+                    <ul class="list-items">
+                    	{pboot:list scode=19 num=6 order=date}
+                        <li><a href="[list:link]">[list:title lencn=28]</a> <span class="date">[list:date style=Y-m-d]</span></li>
+                        {/pboot:list}
+                    </ul>
+                </div>
+                <div class="tab-pane" id="tab-1">
+                    <ul class="list-items">
+                    	{pboot:list scode=21 num=6 order=date}
+                        <li><a href="[list:link]">[list:title lencn=28]</a> <span class="date">[list:date style=Y-m-d]</span></li>
+                        {/pboot:list}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
+    <!-- 六栏目上半部分：科学成果 / 合作伙伴 / 设备共享 -->
+    <div class="grid-3">
+    	{pboot:sort scode=25}
+        <div class="section-box">
+            <div class="section-header"><h3>科学成果</h3><a href="[sort:link]" class="more">更多>></a></div>
+            <ul class="list-items">
+            	{pboot:list scode=25 num=5 order=date}
+                <li><a href="[list:link]">[list:title lencn=18]</a></li>
+                {/pboot:list}
+            </ul>
+        </div>
+        {/pboot:sort}
+        {pboot:sort scode=43}
+        <div class="section-box">
+            <div class="section-header"><h3>合作伙伴</h3><a href="[sort:link]" class="more">更多>></a></div>
+            <ul class="list-items">
+            	{pboot:list scode=43 num=5 order=date}
+                <li><a href="[list:link]">[list:title lencn=18]</a></li>
+                {/pboot:list}
+            </ul>
+        </div>
+        {/pboot:sort}
+        {pboot:sort scode=36}
+        <div class="section-box">
+            <div class="section-header"><h3>设备共享</h3><a href="[sort:link]" class="more">更多>></a></div>
+            <ul class="list-items">
+            	{pboot:list scode=36 num=5 order=date}
+                <li><a href="[list:link]">[list:title lencn=18]</a></li>
+                {/pboot:list}
+            </ul>
+        </div>
+        {/pboot:sort}
+    </div>
 
-<script src="{pboot:sitetplpath}/swiper-4.3.5/js/swiper.min.js"></script>
-<script>        
-  var mySwiper = new Swiper ('.swiper-container', {
-    direction: 'horizontal',
-    loop: true,
-    speed: 1500,
-    autoplay : {
-        delay:3500,
-        disableOnInteraction: false
-     },
-     
-    
-    // 如果需要分页器
-    pagination: {
-      el: '.swiper-pagination',
-      clickable :true,
-    },
-    
-    // 如果需要前进后退按钮
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-   
-  })        
-</script>
-  
+    <!-- 六栏目下半部分：技术转移 / 成果转化 / 互动交流 -->
+    <div class="grid-3">
+    	{pboot:sort scode=32}
+        <div class="section-box">
+            <div class="section-header"><h3>技术转移</h3><a href="[sort:link]" class="more">更多>></a></div>
+            <ul class="list-items">
+            	{pboot:list scode=32 num=5 order=date}
+                <li><a href="[list:link]">[list:title lencn=18]</a></li>
+                {/pboot:list}
+            </ul>
+        </div>
+        {/pboot:sort}
+        {pboot:sort scode=33}
+        <div class="section-box">
+            <div class="section-header"><h3>成果转化</h3><a href="[sort:link]" class="more">更多>></a></div>
+            <ul class="list-items">
+            	{pboot:list scode=33 num=5 order=date}
+                <li><a href="[list:link]">[list:title lencn=18]</a></li>
+                {/pboot:list}
+            </ul>
+        </div>
+        {/pboot:sort}
+        <div class="section-box interaction-box">
+            <div class="section-header"><h3>互动交流</h3></div>
+            <div class="interaction-icons">
+                <div class="icon-btn">
+                    <div class="icon-circle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056b3" stroke-width="1.5">
+                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                        </svg>
+                    </div>
+                    <p>在线咨询</p>
+                </div>
+                <div class="icon-btn">
+                    <div class="icon-circle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056b3" stroke-width="1.5">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                    </div>
+                    <p>意见建议</p>
+                </div>
+                <div class="icon-btn">
+                    <div class="icon-circle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056b3" stroke-width="1.5">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <path d="M8 10h.01M12 10h.01M16 10h.01"/>
+                        </svg>
+                    </div>
+                    <p>专家答疑</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专家照片（蓝色梯形） -->
+    <div class="scroll-section expert-section" id="expertSection">
+        <div class="side-title">
+            <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M5.5 21v-2a4.5 4.5 0 0 1 4.5-4.5h4a4.5 4.5 0 0 1 4.5 4.5v2"/>
+                <path d="M12 11v6"/><path d="M9 14h6"/>
+            </svg>
+            <span class="title-text">智库专家</span>
+        </div>
+        <div class="scroll-track">
+            <div class="scroll-inner" id="expertTrack">
+            	{pboot:list scode=46 num=20 order=sorting}
+                <a href="[list:link]" class="expert-card">
+                    <img src="[list:ico]" alt="[list:title]">
+                    <div class="expert-name">[list:title lencn=6]</div>
+                    <div class="expert-field">[list:description lencn=10]</div>
+                </a>
+                {/pboot:list}
+            </div>
+        </div>
+    </div>
+
+    <!-- 荣誉资质（红色梯形） -->
+    <div class="scroll-section honor-section" id="honorSection">
+        <div class="side-title">
+            <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                <circle cx="12" cy="8" r="6"/>
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                <path d="M8 12h8"/>
+            </svg>
+            <span class="title-text">荣誉资质</span>
+        </div>
+        <div class="scroll-track">
+            <div class="scroll-inner" id="honorTrack">
+            	{pboot:list scode=17 num=20 order=sorting}
+                <a href="[list:link]" class="honor-item"><img src="[list:ico]" alt="[list:title]"></a>
+                {/pboot:list}
+            </div>
+        </div>
+    </div>
+
+</main>
+
 {include file=comm/foot.html}
-

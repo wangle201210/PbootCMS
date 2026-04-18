@@ -1,24 +1,64 @@
 {include file=comm/head.html}
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css">
 
-{include file=comm/top.html}
+<!-- 主体内容 -->
+<div class="container">
 
-<div class="container pages">
-
-	{include file=comm/position.html}
-  	 
-  	{include file=comm/sortnav.html}
-
-    <h2 class="text-center fs-sm-28 fs-20 mt-3">{content:title}</h2>
-    <div class="text-center border-bottom text-secondary pb-2 mb-3">
-    	  时间：{content:date style=Y-m-d}&nbsp;&nbsp;&nbsp;访问量：{content:visits operate=+1000}
+    <!-- 面包屑 -->
+    <div class="breadcrumb">
+        {pboot:position separator='<span class="sep">&gt;</span>'}
     </div>
-	<div class="content mb-3">{content:content}</div>
-	<div class="text-secondary lh-2">
-		<p>上一篇：{content:precontent}</p>
-		<p>下一篇：{content:nextcontent}</p>
-	</div>
-</div>
 
-{include file=comm/comment.html}
+    <div class="page-content">
+
+        <!-- 左侧子栏目导航 -->
+        <aside class="sidebar">
+        	{pboot:sort scode={sort:tcode}}
+            <div class="sidebar-title">[sort:name]</div>
+            {/pboot:sort}
+            <div class="sidebar-menu">
+                {pboot:nav num=20 parent={sort:tcode}}
+                <a href="[nav:link]" {pboot:if('[nav:scode]'=='{sort:scode}')}class="active"{/pboot:if}>[nav:name]</a>
+                {pboot:if([nav:soncount]>0)}
+                <div class="sidebar-sub">
+                    {pboot:2nav parent=[nav:scode]}
+                    <a href="[2nav:link]" {pboot:2if('[2nav:scode]'=='{sort:scode}')}class="active"{/pboot:2if}>[2nav:name]</a>
+                    {/pboot:2nav}
+                </div>
+                {/pboot:if}
+                {/pboot:nav}
+            </div>
+        </aside>
+
+        <!-- 右侧文章详情 -->
+        <div class="content-area">
+            <div class="article-detail">
+                <div class="article-detail-header">
+                    <h1>{content:title}</h1>
+                    <div class="article-meta">
+                        <span>发布时间：{content:date style=Y-m-d}</span>
+                        <span>来源：{pboot:companyname}</span>
+                        <span>浏览：{content:visits}次</span>
+                    </div>
+                </div>
+
+                <div class="article-body">
+                    {content:content}
+                </div>
+
+                <!-- 上一篇 / 下一篇 -->
+                <div class="article-nav">
+                    <div>上一篇：{content:precontent}</div>
+                    <div>下一篇：{content:nextcontent}</div>
+                </div>
+            </div>
+
+            {pboot:sort scode={sort:scode}}
+            <a href="[sort:link]" class="back-to-list">返回列表</a>
+            {/pboot:sort}
+        </div>
+
+    </div>
+</div>
 
 {include file=comm/foot.html}
