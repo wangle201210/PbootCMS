@@ -842,6 +842,8 @@ a {
 
 .link-title-row {
     margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
 }
 
 .link-title {
@@ -852,6 +854,18 @@ a {
     background: #0056b3;
     padding: 6px 20px;
     border-radius: 3px;
+}
+
+.link-title-row::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 24px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #0056b3;
 }
 
 .link-select-row {
