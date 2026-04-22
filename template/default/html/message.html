@@ -1,136 +1,312 @@
-﻿{include file=comm/head.html}
+{include file=comm/head.html}
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css">
 
-{include file=comm/top.html}
+<div class="container">
 
-<div class="container pages">
-	{include file=comm/position.html}
+    <div class="breadcrumb">
+        {pboot:position separator='<span class="sep">&gt;</span>'}
+    </div>
 
-	{pboot:if({page:rows}>0)}
-    	<h5 class="border-bottom border-info pb-2"><i class="fa fa-sliders" aria-hidden="true"></i> 留言记录</h5>
-	{/pboot:if}
-	 
-	<!-- 留言记录 -->
-    {pboot:message num=2}
-    <div class="media border-bottom pb-3 pt-3">
-	  <img class="mr-3" src="[message:headpic]" height="25">
-	  <div class="media-body">
-	    <h5 class="mt-0">[message:nickname]：</h5>
-	    <p>[message:content]</p>
-	    <p>
-	    	<span class="badge badge-light text-secondary font-weight-normal">[message:os]</span>
-	    	<span class="badge badge-light text-secondary font-weight-normal">[message:bs]</span>
-	    	<span class="badge badge-light text-secondary font-weight-normal">[message:askdate]</span>
-	    </p>
-	    
-	    {pboot:if('[message:recontent]'!='')}
-	    <div class="media mt-3 border-top-dashed pt-3">
-	      <img class="mr-3" src="{pboot:sitetplpath}/images/user.png" height="25">
-	      <div class="media-body">
-	        <h5 class="mt-0">管理员回复：</h5>
-	        <p>[message:recontent]</p>
-	        <p><span class="badge badge-light text-secondary font-weight-normal">[message:replydate]</span></p>
-	      </div>
-	    </div>
-	    {/pboot:if}
-	  </div>
-	</div>
-	{/pboot:message}
-	
-	<!-- 分页 -->
- 	{pboot:if({page:rows}>0)}
-	<nav aria-label="page navigation" class="my-4">
-      <div class="pagination justify-content-center">
-      	<a class="page-item page-link" href="{page:index}">首页</a>
-        <a class="page-item page-link" href="{page:pre}">上一页</a>
-        {page:numbar}<!-- 数字条，小屏幕时自动隐藏-->
-        <a class="page-item page-link" href="{page:next}">下一页</a>
-        <a class="page-item page-link" href="{page:last}">尾页</a>
-      </div>
-    </nav>
-    {/pboot:if}
-    
-    <!-- 留言表单 -->
-    <div class="row">
-    	<div class="col-lg-3"></div>
-    	<div class="col-12 col-lg-6">
-        	<form class="my-4" onsubmit="return submsg(this);">
-                <div class="form-group">
-                    <label for="contacts">联系人</label>
-                    <div>
-                        <input type="text" name="contacts" required id="contacts" class="form-control" placeholder="请输入联系人">
-                    </div>
+    <div class="page-content">
+
+        <!-- 右侧内容 -->
+        <div class="content-area">
+
+            <!-- 留言表单 -->
+            <div class="article-detail">
+                <div class="article-detail-header">
+                    <h1>提交留言</h1>
                 </div>
-                
-                <div class="form-group">
-                    <label for="mobile">手　机</label>
-                    <div>
-                        <input type="text" name="mobile" required id="mobile" class="form-control" placeholder="请输入联系人手机">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="content" >内　容</label>
-                    <div>
-                        <textarea name="content" id="content" class="form-control" placeholder="请输入留言内容"></textarea>
-                    </div>
-                </div>
-                
-                {pboot:if({pboot:msgcodestatus})}
-                <div class="form-group">
-                    <label for="checkcode">验证码</label>
-                    <div class="row">
-                        <div class="col-6">
-                            <input type="text" name="checkcode" required id="checkcode" class="form-control" placeholder="请输入验证码">
+                <div class="article-body msg-form-wrap">
+                    <form onsubmit="return submsg(this);">
+                        <div class="msg-form-grid">
+                            <div class="msg-field">
+                                <label>联系人<span class="req">*</span></label>
+                                <input type="text" name="contacts" required id="contacts" placeholder="请输入您的姓名">
+                            </div>
+                            <div class="msg-field">
+                                <label>联系电话<span class="req">*</span></label>
+                                <input type="text" name="mobile" required id="mobile" placeholder="请输入您的手机号">
+                            </div>
+                            <div class="msg-field full">
+                                <label>留言内容</label>
+                                <textarea name="content" id="content" rows="5" placeholder="请输入您想说的话..."></textarea>
+                            </div>
+                            {pboot:if({pboot:msgcodestatus})}
+                            <div class="msg-field">
+                                <label>验证码<span class="req">*</span></label>
+                                <div class="code-row">
+                                    <input type="text" name="checkcode" required id="checkcode" placeholder="请输入验证码">
+                                    <img title="点击刷新" class="codeimg" src="{pboot:checkcode}" onclick="this.src='{pboot:checkcode}?'+Math.round(Math.random()*10);" />
+                                </div>
+                            </div>
+                            {/pboot:if}
                         </div>
-                        <div class="col-6">
-                            <img title="点击刷新" class="codeimg" style="height:33px;" src="{pboot:checkcode}" onclick="this.src='{pboot:checkcode}?'+Math.round(Math.random()*10);" />
+                        <div class="msg-submit-row">
+                            <button type="submit" class="msg-submit-btn">提交留言</button>
                         </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 留言记录 -->
+            {pboot:message num=5}
+            <div class="msg-item">
+                <div class="msg-avatar">[message:contacts]</div>
+                <div class="msg-body">
+                    <div class="msg-meta">
+                        <span class="msg-name">[message:contacts]</span>
+                        <span class="msg-time">[message:askdate]</span>
                     </div>
+                    <div class="msg-text">[message:content]</div>
+                    {pboot:if('[message:recontent]'!='')}
+                    <div class="msg-reply">
+                        <span class="reply-badge">管理员回复</span>
+                        <span class="reply-text">[message:recontent]</span>
+                        <span class="reply-time">[message:replydate]</span>
+                    </div>
+                    {/pboot:if}
                 </div>
-                {/pboot:if}
-                
-                <div class="form-group">
-                   <button type="submit" class="btn btn-info mb-2">提交留言</button>
-                </div>
-            </form>
+            </div>
+            {/pboot:message}
+
+            <div class="pagination">
+                <a href="{page:index}" class="page-item">首页</a>
+                <a href="{page:pre}" class="page-item">上一页</a>
+                {page:numbar}
+                <a href="{page:next}" class="page-item">下一页</a>
+                <a href="{page:last}" class="page-item">尾页</a>
+            </div>
+
         </div>
-        <div class="col-lg-3"></div>
-    </div> 
 
+    </div>
 </div>
 
+<style>
+/* 留言表单 */
+.msg-form-wrap {
+    padding: 20px 24px !important;
+}
+
+.msg-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.msg-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.msg-field.full {
+    grid-column: 1 / -1;
+}
+
+.msg-field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.msg-field label .req {
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+.msg-field input,
+.msg-field textarea {
+    border: 1px solid #d0dce6;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    font-family: inherit;
+    background: #fafcfe;
+}
+
+.msg-field input:focus,
+.msg-field textarea:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+    background: #fff;
+}
+
+.msg-field textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.code-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.code-row input { flex: 1; }
+
+.code-row img {
+    height: 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #d0dce6;
+}
+
+.msg-submit-row {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.msg-submit-btn {
+    background: linear-gradient(90deg, #0056b3, #0073e6);
+    color: #fff;
+    border: none;
+    padding: 11px 56px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    box-shadow: 0 3px 10px rgba(0, 86, 179, 0.25);
+}
+
+.msg-submit-btn:hover {
+    background: linear-gradient(90deg, #004494, #0060c7);
+    box-shadow: 0 4px 14px rgba(0, 86, 179, 0.35);
+    transform: translateY(-1px);
+}
+
+/* 留言记录 */
+.msg-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    margin-top: 12px;
+    background: #fff;
+    border: 1px solid #d8e0e8;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 56, 102, 0.06);
+}
+
+.msg-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0056b3, #4da6ff);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.msg-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.msg-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.msg-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.msg-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.msg-text {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    word-break: break-word;
+}
+
+.msg-reply {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #f0f6fc;
+    border-left: 3px solid #0056b3;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+}
+
+.reply-badge {
+    display: inline-block;
+    background: #0056b3;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.reply-text {
+    color: #444;
+    vertical-align: middle;
+}
+
+.reply-time {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #999;
+}
+
+@media (max-width: 768px) {
+    .msg-form-wrap { padding: 16px 14px !important; }
+    .msg-form-grid { grid-template-columns: 1fr; gap: 12px; }
+    .msg-submit-btn { width: 100%; padding: 11px 0; }
+    .msg-item { gap: 10px; padding: 12px; }
+    .msg-avatar { width: 36px; height: 36px; font-size: 13px; }
+}
+</style>
 
 <script>
-
-//ajax提交留言
 function submsg(obj){
   var url='{pboot:msgaction}';
   var contacts=$(obj).find("#contacts").val();
   var mobile=$(obj).find("#mobile").val();
   var content=$(obj).find("#content").val();
   var checkcode=$(obj).find("#checkcode").val();
-  
+
   $.ajax({
     type: 'POST',
     url: url,
     dataType: 'json',
     data: {
-    	contacts: contacts,
-    	mobile: mobile,
-    	content: content,
-    	checkcode: checkcode
+        contacts: contacts,
+        mobile: mobile,
+        content: content,
+        checkcode: checkcode
     },
     success: function (response, status) {
       if(response.code){
-		 alert("谢谢您的反馈，我们会尽快联系您！");
-		 $(obj)[0].reset(); 
-      }else{ 
-    	 if(response.tourl!=""){
-    		 if(confirm(response.data+'是否立即跳转登录？')){
-    			 location.href=response.tourl; 
-   	   	     }
-    	 }
-    	 $('.codeimg').click();//更新验证码
+         alert("谢谢您的反馈，我们会尽快联系您！");
+         $(obj)[0].reset();
+      }else{
+         if(response.tourl!=""){
+             if(confirm(response.data+'是否立即跳转登录？')){
+                 location.href=response.tourl;
+             }
+         }
+         $('.codeimg').click();
       }
     },
     error:function(xhr,status,error){
@@ -141,5 +317,4 @@ function submsg(obj){
 }
 </script>
 
- 
 {include file=comm/foot.html}
