@@ -961,6 +961,13 @@ a {
     line-height: 1.8;
 }
 
+.footer-info .sep {
+    display: inline-block;
+    margin: 0 16px;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 300;
+}
+
 /* ========== 移动端适配（≤768px） ========== */
 @media (max-width: 768px) {
     .container {
@@ -1130,6 +1137,14 @@ a {
     .footer-info {
         flex-direction: column;
         gap: 5px;
+    }
+
+    .footer-info .sep {
+        display: none;
+    }
+
+    .footer-info .info-item {
+        display: block;
     }
 }
 

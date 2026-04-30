@@ -21,8 +21,8 @@
                     <form onsubmit="return submsg(this);">
                         <div class="msg-form-grid">
                             <div class="msg-field">
-                                <label>联系人<span class="req">*</span></label>
-                                <input type="text" name="contacts" required id="contacts" placeholder="请输入您的姓名">
+                                <label>企业/单位名称+联系人<span class="req">*</span></label>
+                                <input type="text" name="contacts" required id="contacts" placeholder="请输入企业/单位名称及联系人姓名">
                             </div>
                             <div class="msg-field">
                                 <label>联系电话<span class="req">*</span></label>
@@ -41,6 +41,9 @@
                                 </div>
                             </div>
                             {/pboot:if}
+                            <div class="msg-field full">
+                                <p class="msg-privacy">🔒 隐私保护说明：您提交的留言及个人信息，仅您本人与后台管理人员可见，不对外公开，请放心填写。</p>
+                            </div>
                         </div>
                         <div class="msg-submit-row">
                             <button type="submit" class="msg-submit-btn">提交留言</button>
@@ -154,6 +157,14 @@
     border-radius: 4px;
     cursor: pointer;
     border: 1px solid #d0dce6;
+}
+
+.msg-privacy {
+    margin-top: -4px;
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
+    line-height: 1.6;
 }
 
 .msg-submit-row {
