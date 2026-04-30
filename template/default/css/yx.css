@@ -43,7 +43,7 @@ a {
 
 /* ========== 头部 ========== */
 .header {
-    padding: 12px 0;
+    padding: 20px 0;
     background: linear-gradient(180deg, #d5e3f0 0%, #e4edf5 100%);
 }
 
@@ -54,7 +54,7 @@ a {
 }
 
 .logo-img {
-    height: 45px;
+    height: 58px;
     width: auto;
 }
 
@@ -109,15 +109,15 @@ a {
 
 .main-nav > ul > li > a {
     display: block;
-    padding: 0 22px;
+    padding: 0 34px;
     font-size: 15px;
     font-weight: bold;
     transition: all 0.25s ease;
     white-space: nowrap;
     color: #fff;
-    letter-spacing: 0.5px;
-    line-height: 46px;
-    height: 46px;
+    letter-spacing: 1px;
+    line-height: 56px;
+    height: 56px;
 }
 
 .main-nav > ul > li > a:hover,
@@ -244,8 +244,8 @@ a {
     .main-nav > ul > li > a {
         padding: 0 40px 0 16px;
         font-size: 15px;
-        line-height: 44px;
-        height: 44px;
+        line-height: 50px;
+        height: 50px;
         position: relative;
     }
 
@@ -979,7 +979,7 @@ a {
 
     /* 头部：logo居中，搜索框全宽 */
     .header {
-        padding: 10px 0;
+        padding: 14px 0;
     }
 
     .header .container {
@@ -989,7 +989,7 @@ a {
     }
 
     .logo-img {
-        height: 35px;
+        height: 44px;
     }
 
     .search-box {
