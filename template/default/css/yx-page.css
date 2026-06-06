@@ -80,7 +80,7 @@
 }
 
 .sidebar-menu a:hover {
-    background: #f0f6fc;
+    background: #ecf7f0;
     color: #0056b3;
 }
 
@@ -181,7 +181,7 @@
 }
 
 .article-item:hover {
-    background: #f5f9fd;
+    background: #ecf7f0;
 }
 
 .article-item-title {
@@ -244,9 +244,9 @@
 }
 
 .pagination a:hover {
-    background: #e8f0fa;
-    color: #0056b3;
-    border-color: #b0c8e0;
+    background: #ddefe4;
+    color: #1f7a4d;
+    border-color: #a8d4bc;
 }
 
 .pagination .active,
@@ -365,7 +365,7 @@
 }
 
 .back-to-list:hover {
-    background: #f0f6fc;
+    background: #ecf7f0;
 }
 
 /* ========== 移动端适配（≤768px） ========== */
