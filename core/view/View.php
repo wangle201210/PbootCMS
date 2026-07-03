@@ -69,18 +69,41 @@ class View
         }
     }
 
-    // 变量获取
-    public function getVar($var)
+    // 变量获取，默认进行HTML转义防止XSS攻击
+    public function getVar($var, $escape = false)
     {
         if (! empty($var)) {
             if (isset($this->vars[$var])) {
-                return $this->vars[$var];
+                $data = $this->vars[$var];
+                if ($escape) {
+                    return self::escapeHtml($data);
+                }
+                return $data;
             } else {
                 return null;
             }
         } else {
             error('传递的获取模板变量有误');
         }
+    }
+
+    // 递归HTML转义，防止XSS攻击
+    private static function escapeHtml($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = self::escapeHtml($value);
+            }
+            return $data;
+        } elseif (is_object($data)) {
+            foreach ($data as $key => $value) {
+                $data->$key = self::escapeHtml($value);
+            }
+            return $data;
+        } elseif (is_string($data)) {
+            return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+        }
+        return $data;
     }
 
     // 解析模板文件
@@ -150,6 +173,7 @@ class View
             } else {
                 $wap = '';
             }
+            $content = preg_replace('/<\?(php|=)?|\?>|<%|%>|<script\s+language\s*=\s*["\']?php["\']?\s*>/i', '', $content);
             $cacheFile = $this->cachePath . '/' . md5(get_http_url() . $_SERVER["REQUEST_URI"] . $lg . $wap) . '.html'; // 缓存文件
             file_put_contents($cacheFile, $content) ?: error('缓存文件' . $cacheFile . '生成出错！请检查目录是否有可写权限！'); // 写入缓存文件
             return true;

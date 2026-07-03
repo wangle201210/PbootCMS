@@ -44,6 +44,9 @@ class AdminController extends Controller
             $models = model('admin.content.Model');
             $this->assign('menu_models', $models->getModelMenu());
             
+            // AI 功能总开关；浮动按钮由 Content/Single 等控制器按需 assign ai_show_assistant（勿在基类默认注入，避免重复 assign）
+            $this->assign('ai_enabled', $this->config('ai_enabled') == '1' ? '1' : '0');
+            
             // 注入编码后的回跳地址
             $this->assign('btnqs', get_btn_qs());
             $this->assign('backurl', get_backurl());
@@ -52,7 +55,8 @@ class AdminController extends Controller
             if ($_GET['p'] && $this->config('app_url_type') == 3) {
                 $this->assign('pathinfo', '<input name="p" type="hidden" value="' . get('p') . '">');
             }
-			
+
+            $this->checkPwSecurity(); // 密码安全检查
         }
         
         // 不进行表单检验的控制器
@@ -148,7 +152,8 @@ class AdminController extends Controller
             '/admin/Index/area', // 区域选择
             '/admin/Index/clearCache', // 清理缓存
 			'/admin/Index/clearOnlySysCache', // 清理系统缓存
-            '/admin/Index/upload' // 上传文件
+            '/admin/Index/upload', // 上传文件
+            '/admin/Ai', // AI 接口（登录用户均可调用：ping/generate/rewrite/tdk/alt）
         );
         $levals = session('levels');
         $path1 = '/' . M . '/' . C;
@@ -158,6 +163,22 @@ class AdminController extends Controller
             return true;
         } else {
             error('您的账号权限不足，您无法执行该操作！');
+        }
+    }
+
+    // 密码安全检查：强制首次登录修改默认密码
+    private function checkPwSecurity()
+    {
+        $pw_public_path = array(
+            '/admin/Index/loginOut',
+            '/admin/Index/ucenter',
+            '/admin/Index/area',
+            '/admin/Index/clearSession', // 清理会话
+        );
+
+        $current_path = '/' . M . '/' . C . '/' . F;
+        if (!session('pwsecurity') && !in_array($current_path, $pw_public_path)) {
+            location(url('/admin/Index/ucenter'));
         }
     }
 
