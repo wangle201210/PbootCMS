@@ -35,32 +35,20 @@
 <!-- 导航栏 -->
 <nav class="main-nav">
     <button class="nav-toggle" id="navToggle">☰ 导航</button>
-    <ul class="container" id="navMenu">
+    <ul class="container" id="navMenu" data-current-scode="{sort:scode}" data-current-tcode="{sort:tcode}">
         <li><a href="{pboot:sitepath}/" {pboot:if(0=='{sort:scode}')}class="active"{/pboot:if}>首页</a></li>
         {pboot:nav num=15 parent=0}
         <li>
-            {pboot:if([nav:soncount]>0)}
-            {pboot:2if('[nav:scode]'=='{sort:tcode}')}
-            <a href="javascript:void(0);" class="nav-parent active" aria-disabled="true">[nav:name]</a>
-            {2else}
-            <a href="javascript:void(0);" class="nav-parent" aria-disabled="true">[nav:name]</a>
-            {/pboot:2if}
-            {else}
-            <a href="[nav:link]" {pboot:if('[nav:scode]'=='{sort:tcode}')}class="active"{/pboot:if}>[nav:name]</a>
-            {/pboot:if}
+            <a href="[nav:link]" data-nav-scode="[nav:scode]" data-nav-soncount="[nav:soncount]" data-nav-level="1">[nav:name]</a>
             {pboot:if([nav:soncount]>0)}
             <ul class="sub-menu">
                 {pboot:2nav parent=[nav:scode]}
                 <li>
-                    {pboot:2if([2nav:soncount]>0)}
-                    <a href="javascript:void(0);" class="nav-parent" aria-disabled="true">[2nav:name]</a>
-                    {2else}
-                    <a href="[2nav:link]">[2nav:name]</a>
-                    {/pboot:2if}
+                    <a href="[2nav:link]" data-nav-scode="[2nav:scode]" data-nav-soncount="[2nav:soncount]" data-nav-level="2">[2nav:name]</a>
                     {pboot:2if([2nav:soncount]>0)}
                     <ul class="sub-menu">
                         {pboot:3nav parent=[2nav:scode]}
-                        <li><a href="[3nav:link]">[3nav:name]</a></li>
+                        <li><a href="[3nav:link]" data-nav-scode="[3nav:scode]" data-nav-soncount="[3nav:soncount]" data-nav-level="3">[3nav:name]</a></li>
                         {/pboot:3nav}
                     </ul>
                     {/pboot:2if}

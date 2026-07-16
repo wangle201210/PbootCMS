@@ -59,6 +59,30 @@ function autoScroll(trackId, speed) {
 autoScroll('expertTrack', 0.5);
 autoScroll('honorTrack', 0.6);
 
+// 主导航：父级只展开不跳转，当前栏目高亮
+var navMenu = document.getElementById('navMenu');
+if (navMenu) {
+    var currentScode = navMenu.getAttribute('data-current-scode') || '';
+    var currentTcode = navMenu.getAttribute('data-current-tcode') || '';
+    navMenu.querySelectorAll('a[data-nav-scode]').forEach(function(link) {
+        var soncount = parseInt(link.getAttribute('data-nav-soncount') || '0', 10);
+        var scode = link.getAttribute('data-nav-scode') || '';
+
+        if (soncount > 0) {
+            link.setAttribute('href', 'javascript:void(0);');
+            link.setAttribute('aria-disabled', 'true');
+            link.classList.add('nav-parent');
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        if (scode === currentScode || scode === currentTcode) {
+            link.classList.add('active');
+        }
+    });
+}
+
 // 侧边栏栏目：父级只作为分组展示，当前末级自动高亮
 document.querySelectorAll('.sidebar-menu').forEach(function(menu) {
     var currentScode = menu.getAttribute('data-current-scode') || '';
