@@ -1,5 +1,5 @@
 {include file=comm/head.html}
-<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=20260716">
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202607161430">
 
 <!-- 主体内容 -->
 <div class="container">
@@ -44,6 +44,18 @@
 
                 <div class="article-body">
                     {content:content}
+                    {pboot:if({content:ispics}==1)}
+                    <div class="campus-gallery campus-detail-gallery">
+                        {pboot:pics id={content:id} num=50}
+                        <a class="campus-gallery-item" href="[pics:src]" target="_blank" rel="noopener">
+                            <span class="campus-gallery-thumb">
+                                <img src="[pics:src]" alt="[pics:title]">
+                            </span>
+                            <span class="campus-gallery-title">[pics:title]</span>
+                        </a>
+                        {/pboot:pics}
+                    </div>
+                    {/pboot:if}
                 </div>
 
                 <!-- 上一篇 / 下一篇 -->

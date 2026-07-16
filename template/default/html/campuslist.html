@@ -30,18 +30,26 @@
             </div>
         </aside>
 
-        <!-- 右侧文章列表 -->
+        <!-- 右侧相册列表 -->
         <div class="content-area">
-            <div class="article-list">
+            <div class="campus-album-list">
                 <div class="article-list-header">{sort:name}</div>
-                <div class="article-list-body">
-                	{pboot:list num=10 order=date}
-                    <a href="[list:link]" class="article-item">
-                        <span class="article-item-title">[list:title]</span>
-                        <span class="article-item-date">[list:date style=Y-m-d]</span>
-                    </a>
-                    {/pboot:list}
-                </div>
+
+                {pboot:list num=8 order=sorting ispics=1}
+                <article class="campus-album-card">
+                    <div class="campus-album-head">
+                        <a href="[list:link]" class="campus-album-title">[list:title]</a>
+                        <span class="campus-album-date">[list:date style=Y-m-d]</span>
+                    </div>
+                    <div class="campus-album-photos">
+                        {pboot:pics id=[list:id] num=6}
+                        <a href="[pics:src]" class="campus-album-photo" target="_blank" rel="noopener">
+                            <img src="[pics:src]" alt="[pics:title]">
+                        </a>
+                        {/pboot:pics}
+                    </div>
+                </article>
+                {/pboot:list}
             </div>
 
             <!-- 分页 -->
@@ -54,7 +62,7 @@
               	<a href="{page:last}" class="page-item">尾页</a>
             </div>
             {else}
-            <div style="text-align:center;padding:30px;color:#999;">暂无数据</div>
+            <div style="text-align:center;padding:30px;color:#999;">暂无相册</div>
             {/pboot:if}
         </div>
 
