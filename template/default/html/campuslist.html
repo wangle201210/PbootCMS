@@ -1,5 +1,5 @@
 {include file=comm/head.html}
-<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202607161430">
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202607161445">
 
 <!-- 主体内容 -->
 <div class="container">
@@ -37,17 +37,20 @@
 
                 {pboot:list num=8 order=sorting ispics=1}
                 <article class="campus-album-card">
-                    <div class="campus-album-head">
-                        <a href="[list:link]" class="campus-album-title">[list:title]</a>
-                        <span class="campus-album-date">[list:date style=Y-m-d]</span>
-                    </div>
-                    <div class="campus-album-photos">
-                        {pboot:pics id=[list:id] num=6}
-                        <a href="[pics:src]" class="campus-album-photo" target="_blank" rel="noopener">
-                            <img src="[pics:src]" alt="[pics:title]">
-                        </a>
-                        {/pboot:pics}
-                    </div>
+                    <a href="[list:link]" class="campus-album-frame">
+                        <span class="campus-album-stack">
+                            {pboot:pics id=[list:id] num=3}
+                            <span class="campus-album-sheet">
+                                <img src="[pics:src]" alt="[pics:title]">
+                            </span>
+                            {/pboot:pics}
+                        </span>
+                        <span class="campus-album-info">
+                            <span class="campus-album-title">[list:title]</span>
+                            <span class="campus-album-date">[list:date style=Y-m-d]</span>
+                            <span class="campus-album-more">进入相册</span>
+                        </span>
+                    </a>
                 </article>
                 {/pboot:list}
             </div>
