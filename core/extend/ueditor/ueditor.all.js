@@ -27018,6 +27018,7 @@ UE.plugin.register("simpleupload", function () {
           '.jpeg': 'image/jpeg',
           '.png': 'image/png',
           '.gif': 'image/gif',
+          '.webp': 'image/webp',
         }
         var imageMimeType
         if (fileext.toLowerCase() in imageMimeMap) {

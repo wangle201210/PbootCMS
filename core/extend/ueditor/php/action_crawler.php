@@ -52,8 +52,10 @@ foreach ($source as $imgUrl) {
     // 图片打水印
     $ext = array(
         '.jpg',
+        '.jpeg',
         '.png',
-        '.gif'
+        '.gif',
+        '.webp'
     );
     if (in_array($info['type'], $ext)) {
         resize_img(ROOT_PATH . $info['url']); // 缩放大小

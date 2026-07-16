@@ -75,8 +75,10 @@ $up = new Uploader($fieldName, $config, $base64);
 $rs = $up->getFileInfo();
 $ext = array(
     '.jpg',
+    '.jpeg',
     '.png',
-    '.gif'
+    '.gif',
+    '.webp'
 );
 if (in_array($rs['type'], $ext)) {
     resize_img(ROOT_PATH . $rs['url']); // 缩放大小

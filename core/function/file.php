@@ -191,14 +191,76 @@ function dir_copy($src, $des, $son = 1)
 // 判断文件是否是图片
 function is_image($path)
 {
-    $types = '.gif|.jpeg|.png|.bmp'; // 定义检查的图片类型
+    $types = '.gif|.jpg|.jpeg|.png|.bmp|.webp'; // 定义检查的图片类型
     if (file_exists($path)) {
         $info = getimagesize($path);
+        if (! $info) {
+            return false;
+        }
         $ext = image_type_to_extension($info['2']);
         if (stripos($types, $ext) !== false)
             return true;
     }
     return false;
+}
+
+function image_create_from_type($image, $type)
+{
+    switch ($type) {
+        case 1:
+            return imagecreatefromgif($image);
+        case 2:
+            return imagecreatefromjpeg($image);
+        case 3:
+            return imagecreatefrompng($image);
+        case 18:
+            if (function_exists('imagecreatefromwebp')) {
+                return imagecreatefromwebp($image);
+            }
+            return false;
+    }
+    return false;
+}
+
+function image_fill_alpha($image, $type, $width, $height)
+{
+    if ($type == 1) {
+        $color = imagecolorallocate($image, 255, 255, 255);
+        imagefill($image, 0, 0, $color);
+        imagecolortransparent($image, $color);
+    } elseif ($type == 3 || $type == 18) {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+        $color = imagecolorallocatealpha($image, 255, 255, 255, 127);
+        imagefilledrectangle($image, 0, 0, $width, $height, $color);
+    }
+}
+
+function image_save_by_type($image, $out_image, $type, $img_quality = 90)
+{
+    $img_quality = max(0, min(100, (int) $img_quality));
+    switch ($type) {
+        case 1:
+            return imagegif($image, $out_image);
+        case 2:
+            return imagejpeg($image, $out_image, $img_quality);
+        case 3:
+            return imagepng($image, $out_image, min(9, (int) ($img_quality / 10)));
+        case 18:
+            if (function_exists('imagewebp')) {
+                return imagewebp($image, $out_image, $img_quality);
+            }
+            return false;
+    }
+    return imagejpeg($image, $out_image, $img_quality);
+}
+
+function image_type_error($type)
+{
+    if ($type == 18) {
+        return '当前PHP环境不支持WebP图片处理！';
+    }
+    return '暂不支持此图片格式！';
 }
 
 /**
@@ -304,8 +366,10 @@ function handle_upload($file, $temp, $array_ext_allow, $max_width, $max_height, 
     $image = array(
         'png',
         'jpg',
+        'jpeg',
         'gif',
-        'bmp'
+        'bmp',
+        'webp'
     );
     $file = array(
         'ppt',
@@ -398,16 +462,9 @@ function resize_img($src_image, $out_image = null, $max_width = null, $max_heigh
     }
     
     if ($scale < 1) {
-        switch ($type) {
-            case 1:
-                $img = imagecreatefromgif($src_image);
-                break;
-            case 2:
-                $img = imagecreatefromjpeg($src_image);
-                break;
-            case 3:
-                $img = imagecreatefrompng($src_image);
-                break;
+        $img = image_create_from_type($src_image, $type);
+        if (! $img) {
+            return image_type_error($type);
         }
         
         $new_width = floor($scale * $width);
@@ -415,25 +472,13 @@ function resize_img($src_image, $out_image = null, $max_width = null, $max_heigh
         $new_img = imagecreatetruecolor($new_width, $new_height); // 创建画布
                                                                   
         // 创建透明画布,避免黑色
-        if ($type == 1 || $type == 3) {
-            $color = imagecolorallocate($new_img, 255, 255, 255);
-            imagefill($new_img, 0, 0, $color);
-            imagecolortransparent($new_img, $color);
-        }
-        imagecopyresized($new_img, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+        image_fill_alpha($new_img, $type, $new_width, $new_height);
+        imagecopyresampled($new_img, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
         
-        switch ($type) {
-            case 1:
-                imagegif($new_img, $out_image, $img_quality);
-                break;
-            case 2:
-                imagejpeg($new_img, $out_image, $img_quality);
-                break;
-            case 3:
-                imagepng($new_img, $out_image, $img_quality / 10); // $quality参数取值范围0-99 在php 5.1.2之后变更为0-9
-                break;
-            default:
-                imagejpeg($new_img, $out_image, $img_quality);
+        if (! image_save_by_type($new_img, $out_image, $type, $img_quality)) {
+            imagedestroy($new_img);
+            imagedestroy($img);
+            return image_type_error($type);
         }
         imagedestroy($new_img);
         imagedestroy($img);
@@ -454,16 +499,9 @@ function cut_img($src_image, $out_image = null, $new_width = null, $new_height =
     
     // 获取图片属性
     list ($width, $height, $type, $attr) = getimagesize($src_image);
-    switch ($type) {
-        case 1:
-            $img = imagecreatefromgif($src_image);
-            break;
-        case 2:
-            $img = imagecreatefromjpeg($src_image);
-            break;
-        case 3:
-            $img = imagecreatefrompng($src_image);
-            break;
+    $img = image_create_from_type($src_image, $type);
+    if (! $img) {
+        return image_type_error($type);
     }
     
     // 不限定是等比例缩放
@@ -494,27 +532,15 @@ function cut_img($src_image, $out_image = null, $new_width = null, $new_height =
     $new_img = imagecreatetruecolor($new_width, $new_height);
     
     // 创建透明画布,避免黑色
-    if ($type == 1 || $type == 3) {
-        $color = imagecolorallocate($new_img, 255, 255, 255);
-        imagefill($new_img, 0, 0, $color);
-        imagecolortransparent($new_img, $color);
-    }
+    image_fill_alpha($new_img, $type, $new_width, $new_height);
     
-    imagecopyresized($new_img, $img, 0, 0, 0, 0, $new_width, $new_height, $cut_width, $cut_height);
+    imagecopyresampled($new_img, $img, 0, 0, 0, 0, $new_width, $new_height, $cut_width, $cut_height);
     check_dir(dirname($out_image), true); // 检查输出目录
     
-    switch ($type) {
-        case 1:
-            imagegif($new_img, $out_image, $img_quality);
-            break;
-        case 2:
-            imagejpeg($new_img, $out_image, $img_quality);
-            break;
-        case 3:
-            imagepng($new_img, $out_image, $img_quality / 10); // $quality参数取值范围0-99 在php 5.1.2之后变更为0-9
-            break;
-        default:
-            imagejpeg($new_img, $out_image, $img_quality);
+    if (! image_save_by_type($new_img, $out_image, $type, $img_quality)) {
+        imagedestroy($new_img);
+        imagedestroy($img);
+        return image_type_error($type);
     }
     imagedestroy($new_img);
     imagedestroy($img);
@@ -543,32 +569,19 @@ function watermark_img($src_image, $out_image = null, $position = null, $waterma
     
     // 获取图片属性
     list ($width1, $height1, $type1, $attr1) = getimagesize($src_image);
-    switch ($type1) {
-        case 1:
-            $img1 = imagecreatefromgif($src_image);
-            break;
-        case 2:
-            $img1 = imagecreatefromjpeg($src_image);
-            break;
-        case 3:
-            $img1 = imagecreatefrompng($src_image);
-            break;
+    $img1 = image_create_from_type($src_image, $type1);
+    if (! $img1) {
+        return image_type_error($type1);
     }
     
     if ($watermark_image) {
         $watermark_image = ROOT_PATH . $watermark_image;
         // 获取水印图片
         list ($width2, $height2, $type2, $attr2) = getimagesize($watermark_image);
-        switch ($type2) {
-            case 1:
-                $img2 = imagecreatefromgif($watermark_image);
-                break;
-            case 2:
-                $img2 = imagecreatefromjpeg($watermark_image);
-                break;
-            case 3:
-                $img2 = imagecreatefrompng($watermark_image);
-                break;
+        $img2 = image_create_from_type($watermark_image, $type2);
+        if (! $img2) {
+            imagedestroy($img1);
+            return image_type_error($type2);
         }
     } else {
         if (! $watermark_text_size) {
@@ -635,11 +648,9 @@ function watermark_img($src_image, $out_image = null, $position = null, $waterma
     }
     
     // 创建透明画布,避免黑色
-    if ($type1 == 1 || $type1 == 3) {
+    if ($type1 == 1 || $type1 == 3 || $type1 == 18) {
         $out = imagecreatetruecolor($width1, $height1);
-        $color = imagecolorallocate($out, 255, 255, 255);
-        imagefill($out, 0, 0, $color);
-        imagecolortransparent($out, $color);
+        image_fill_alpha($out, $type1, $width1, $height1);
         imagecopy($out, $img1, 0, 0, 0, 0, $width1, $height1);
     } else {
         $out = $img1;
@@ -650,22 +661,18 @@ function watermark_img($src_image, $out_image = null, $position = null, $waterma
     check_dir(dirname($out_image), true); // 检查输出目录
                                           
     // 输出图片
-    switch ($type1) {
-        case 1:
-            imagegif($out, $out_image, 90);
-            break;
-        case 2:
-            imagejpeg($out, $out_image, 90);
-            break;
-        case 3:
-            imagepng($out, $out_image, 90 / 10); // $quality参数取值范围0-99 在php 5.1.2之后变更为0-9
-            break;
-        default:
-            imagejpeg($out, $out_image, 90);
+    if (! image_save_by_type($out, $out_image, $type1, 90)) {
+        if ($out !== $img1) {
+            imagedestroy($out);
+        }
+        imagedestroy($img1);
+        imagedestroy($img2);
+        return image_type_error($type1);
+    }
+    if ($out !== $img1) {
+        imagedestroy($out);
     }
     imagedestroy($img1);
     imagedestroy($img2);
     return true;
 }
-
-

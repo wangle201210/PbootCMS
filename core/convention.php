@@ -88,7 +88,7 @@ return array(
     
     // 上传配置
     'upload' => array(
-        'format' => 'jpg,jpeg,png,gif,xls,xlsx,doc,docx,ppt,pptx,rar,zip,pdf,txt,mp4,avi,flv,rmvb,mp3,otf,ttf',
+        'format' => 'jpg,jpeg,png,gif,webp,xls,xlsx,doc,docx,ppt,pptx,rar,zip,pdf,txt,mp4,avi,flv,rmvb,mp3,otf,ttf',
         'max_width' => '1920',
         'max_height' => ''
     ),
@@ -121,4 +121,3 @@ return array(
         'Tag' // 第二参数传递tag
     )
 );
- 
