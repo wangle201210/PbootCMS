@@ -59,6 +59,40 @@ function autoScroll(trackId, speed) {
 autoScroll('expertTrack', 0.5);
 autoScroll('honorTrack', 0.6);
 
+// 侧边栏栏目：父级只作为分组展示，当前末级自动高亮
+document.querySelectorAll('.sidebar-menu').forEach(function(menu) {
+    var currentScode = menu.getAttribute('data-current-scode') || '';
+    menu.querySelectorAll('a[data-scode]').forEach(function(link) {
+        var soncount = parseInt(link.getAttribute('data-soncount') || '0', 10);
+        var scode = link.getAttribute('data-scode') || '';
+
+        if (soncount > 0) {
+            link.setAttribute('href', 'javascript:void(0);');
+            link.setAttribute('aria-disabled', 'true');
+            link.classList.add('nav-parent');
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        } else if (scode === currentScode) {
+            link.classList.add('active');
+        }
+    });
+});
+
+// 面包屑：中间级栏目不跳转，只保留首页和当前末级可点击
+document.querySelectorAll('.breadcrumb').forEach(function(crumb) {
+    var links = crumb.querySelectorAll('a');
+    if (links.length <= 2) return;
+    for (var i = 1; i < links.length - 1; i++) {
+        links[i].setAttribute('href', 'javascript:void(0);');
+        links[i].setAttribute('aria-disabled', 'true');
+        links[i].classList.add('nav-parent');
+        links[i].addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    }
+});
+
 // 友情链接：点击展开/收起，互斥
 document.addEventListener('click', function(e) {
     var title = e.target.closest('.link-group-title');

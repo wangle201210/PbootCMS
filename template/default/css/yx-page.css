@@ -13,6 +13,13 @@
     text-decoration: underline;
 }
 
+.breadcrumb a.nav-parent,
+.breadcrumb a.nav-parent:hover {
+    cursor: default;
+    color: #666;
+    text-decoration: none;
+}
+
 .breadcrumb .sep {
     margin: 0 6px;
     color: #bbb;
