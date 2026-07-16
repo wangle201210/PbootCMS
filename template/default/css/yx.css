@@ -125,6 +125,10 @@ a {
     background: rgba(255, 255, 255, 0.12);
 }
 
+.main-nav a.nav-parent {
+    cursor: default;
+}
+
 .nav-toggle {
     display: none;
     background: none;
@@ -185,6 +189,11 @@ a {
     .main-nav .sub-menu a:hover {
         background: #ecf7f0;
         color: #0056b3;
+    }
+
+    .main-nav .sub-menu a.nav-parent {
+        cursor: default;
+        color: #555;
     }
 
     /* 有三级菜单的二级项：右侧加箭头 */
@@ -322,6 +331,10 @@ a {
     .main-nav .sub-menu a:active {
         background: rgba(255, 255, 255, 0.08);
         color: #fff;
+    }
+
+    .main-nav .sub-menu a.nav-parent {
+        cursor: default;
     }
 
     /* 二级有子菜单 */

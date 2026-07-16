@@ -206,7 +206,33 @@ class ContentSortModel extends Model
     // 查找指定单页内容
     public function findContent($scode)
     {
-        return parent::table('ay_content')->where("scode='$scode'")->find();
+        return parent::table('ay_content')->where("scode='$scode'")
+            ->where("acode='" . session('acode') . "'")
+            ->find();
+    }
+
+    // 判断栏目是否存在子栏目
+    public function hasSubSort($scode)
+    {
+        if (! $scode) {
+            return false;
+        }
+        return parent::table('ay_content_sort')->field('id')
+            ->where("pcode='$scode'")
+            ->where("acode='" . session('acode') . "'")
+            ->find();
+    }
+
+    // 判断栏目是否已有内容
+    public function hasContent($scode)
+    {
+        if (! $scode) {
+            return false;
+        }
+        return parent::table('ay_content')->field('id')
+            ->where("(scode='$scode' OR subscode='$scode')")
+            ->where("acode='" . session('acode') . "'")
+            ->find();
     }
 
     // 添加单篇文章

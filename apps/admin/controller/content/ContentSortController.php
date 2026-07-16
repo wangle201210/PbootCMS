@@ -100,10 +100,12 @@ class ContentSortController extends Controller
                 $listtpl = basename(post('listtpl'));
                 $contenttpl = basename(post('contenttpl'));
                 $status = post('status');
+                $outlink = '';
                 
                 if (! $pcode) { // 父编码默认为0
                     $pcode = 0;
                 }
+                $this->checkParentCanHaveChild($pcode);
                 
                 if (! $mcode) {
                     alert_back('栏目模型必须选择！');
@@ -176,6 +178,7 @@ class ContentSortController extends Controller
                 if (! $pcode) { // 父编码默认为0
                     $pcode = 0;
                 }
+                $this->checkParentCanHaveChild($pcode);
                 
                 if (! $name) {
                     alert_back('栏目名不能为空！');
@@ -289,6 +292,14 @@ class ContentSortController extends Controller
         return $list_html;
     }
 
+    // 已有内容的栏目不能再作为父级栏目
+    private function checkParentCanHaveChild($pcode)
+    {
+        if ($pcode && $this->model->hasContent($pcode)) {
+            alert_back('已有内容的栏目不能作为父栏目，请先迁移或删除该栏目的内容！');
+        }
+    }
+
     // 内容栏目删除
     public function del()
     {
@@ -389,6 +400,15 @@ class ContentSortController extends Controller
             if (! $pcode) { // 父编码默认为0
                 $pcode = 0;
             }
+            if (! $currentSort = $this->model->getSort($scode)) {
+                error('编辑的内容已经不存在！', - 1);
+            }
+            if ($pcode == $scode) {
+                alert_back('父栏目不能选择自身！');
+            }
+            if ($pcode != $currentSort->pcode) {
+                $this->checkParentCanHaveChild($pcode);
+            }
             
             if (! $name) {
                 alert_back('栏目名不能为空！');
@@ -451,7 +471,7 @@ class ContentSortController extends Controller
                 // 如果修改为单页并且跳转，则删除单页内容，否则判断是否存在内容，不存在则添加
                 if ($type == 1 && $outlink) {
                     $this->model->delContent($scode);
-                } elseif ($type == 1 && ! $this->model->findContent($scode)) {
+                } elseif ($type == 1 && ! $this->model->hasSubSort($scode) && ! $this->model->findContent($scode)) {
                     $this->addSingle($scode, $name);
                 }
                 

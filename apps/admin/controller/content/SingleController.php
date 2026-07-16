@@ -89,6 +89,9 @@ class SingleController extends Controller
             
             $api = "http://data.zz.baidu.com/urls?site=$domain&token=$token";
             $data = $this->model->getSingle($id);
+            if (model('admin.content.ContentSort')->hasSubSort($data->scode)) {
+                alert_back('中间级栏目不能推送单页内容！');
+            }
             $data->urlname = $data->urlname ?: 'about';
             if ($data->outlink) {
                 alert_back('链接类型不允许推送！');
@@ -119,6 +122,9 @@ class SingleController extends Controller
             
             $api = "http://data.zz.baidu.com/urls?site=$domain&token=$token&type=daily";
             $data = $this->model->getSingle($id);
+            if (model('admin.content.ContentSort')->hasSubSort($data->scode)) {
+                alert_back('中间级栏目不能推送单页内容！');
+            }
             $data->urlname = $data->urlname ?: 'about';
             if ($data->outlink) {
                 alert_back('链接类型不允许推送！');
@@ -142,6 +148,13 @@ class SingleController extends Controller
         
         if (! $id = get('id', 'int')) {
             error('传递的参数值错误！', - 1);
+        }
+
+        if (! $current = $this->model->getSingle($id)) {
+            error('编辑的内容已经不存在！', - 1);
+        }
+        if (model('admin.content.ContentSort')->hasSubSort($current->scode)) {
+            alert_back('中间级栏目不能编辑单页内容！');
         }
         
         // 单独修改状态
@@ -254,10 +267,7 @@ class SingleController extends Controller
         } else {
             // 调取修改内容
             $this->assign('mod', true);
-            if (! $result = $this->model->getSingle($id)) {
-                error('编辑的内容已经不存在！', - 1);
-            }
-            $this->assign('content', $result);
+            $this->assign('content', $current);
             
             // 扩展字段
             if (! $mcode = get('mcode', 'var')) {

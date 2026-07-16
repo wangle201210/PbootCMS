@@ -52,9 +52,14 @@ class ContentController extends Controller
             // 文章分类下拉列表
             $sort_model = model('admin.content.ContentSort');
             $sort_select = $sort_model->getListSelect($mcode);
+            $this->blank = '';
             $this->assign('search_select', $this->makeSortSelect($sort_select, get('scode')));
-            $this->assign('sort_select', $this->makeSortSelect($sort_select, session('addscode')));
-            $this->assign('subsort_select', $this->makeSortSelect($sort_select));
+            $this->blank = '';
+            $this->assign('target_select', $this->makeSortSelect($sort_select, null, true));
+            $this->blank = '';
+            $this->assign('sort_select', $this->makeSortSelect($sort_select, session('addscode'), true));
+            $this->blank = '';
+            $this->assign('subsort_select', $this->makeSortSelect($sort_select, null, true));
 
             // 模型名称
             $this->assign('model_name', model('admin.content.Model')->getName($mcode));
@@ -120,6 +125,10 @@ class ContentController extends Controller
 
             if (!$scode) {
                 alert_back('内容分类不能为空！');
+            }
+            $this->checkLeafSort($scode);
+            if ($subscode) {
+                $this->checkLeafSort($subscode, '内容副栏目只能选择末级栏目！');
             }
 
             if (!$title) {
@@ -229,26 +238,37 @@ class ContentController extends Controller
     }
 
     // 生成分类选择
-    private function makeSortSelect($tree, $selectid = null)
+    private function makeSortSelect($tree, $selectid = null, $leafOnly = false)
     {
         $list_html = '';
         foreach ($tree as $value) {
+            $has_child = ! empty($value->son);
             // 默认选择项
             if ($selectid == $value->scode) {
                 $select = "selected='selected'";
             } else {
                 $select = '';
             }
-            $list_html .= "<option value='{$value->scode}' $select>{$this->blank}{$value->name}";
+            $disabled = ($leafOnly && $has_child) ? "disabled='disabled'" : '';
+            $suffix = ($leafOnly && $has_child) ? '（不可选）' : '';
+            $list_html .= "<option value='{$value->scode}' $select $disabled>{$this->blank}{$value->name}{$suffix}";
             // 子菜单处理
-            if ($value->son) {
+            if ($has_child) {
                 $this->blank .= '　　';
-                $list_html .= $this->makeSortSelect($value->son, $selectid);
+                $list_html .= $this->makeSortSelect($value->son, $selectid, $leafOnly);
             }
         }
         // 循环完后回归位置
         $this->blank = substr($this->blank, 0, -6);
         return $list_html;
+    }
+
+    // 检查栏目是否为末级栏目
+    private function checkLeafSort($scode, $message = '内容只能选择末级栏目，中间级栏目不能添加内容！')
+    {
+        if ($scode && model('admin.content.ContentSort')->hasSubSort($scode)) {
+            alert_back($message);
+        }
     }
 
     // 文章删除
@@ -313,6 +333,7 @@ class ContentController extends Controller
                     if (!$scode) {
                         alert_back('请选择目标栏目！');
                     }
+                    $this->checkLeafSort($scode);
                     if ($this->model->copyContent($list, $scode)) {
                         $this->log('复制内容成功！');
                         success('复制内容成功！', -1);
@@ -329,6 +350,7 @@ class ContentController extends Controller
                     if (!$scode) {
                         alert_back('请选择目标栏目！');
                     }
+                    $this->checkLeafSort($scode);
 
                     if ($this->model->modContent($list, "scode='" . $scode . "'")) {
                         $this->log('移动内容成功！');
@@ -443,6 +465,10 @@ class ContentController extends Controller
             if (!$scode) {
                 alert_back('内容分类不能为空！');
             }
+            $this->checkLeafSort($scode);
+            if ($subscode) {
+                $this->checkLeafSort($subscode, '内容副栏目只能选择末级栏目！');
+            }
 
             if (!$title) {
                 alert_back('文章标题不能为空！');
@@ -549,8 +575,10 @@ class ContentController extends Controller
             // 文章分类
             $sort_model = model('admin.content.ContentSort');
             $sort_select = $sort_model->getListSelect($mcode);
-            $this->assign('sort_select', $this->makeSortSelect($sort_select, $result->scode));
-            $this->assign('subsort_select', $this->makeSortSelect($sort_select, $result->subscode));
+            $this->blank = '';
+            $this->assign('sort_select', $this->makeSortSelect($sort_select, $result->scode, true));
+            $this->blank = '';
+            $this->assign('subsort_select', $this->makeSortSelect($sort_select, $result->subscode, true));
 
             // 模型名称
             $this->assign('model_name', model('admin.content.Model')->getName($mcode));

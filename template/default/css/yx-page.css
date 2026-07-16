@@ -88,6 +88,11 @@
     background: #0056b3;
 }
 
+.sidebar-menu a.nav-parent {
+    cursor: default;
+    color: #555;
+}
+
 .sidebar-menu a.active {
     background: #e8f0fa;
     color: #0056b3;

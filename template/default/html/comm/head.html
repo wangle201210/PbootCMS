@@ -6,7 +6,7 @@
 	<meta name="keywords" content="{pboot:pagekeywords}">
 	<meta name="description" content="{pboot:pagedescription}">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,shrink-to-fit=no">
-	<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx.css?v=20260606">
+	<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx.css?v=20260716">
 	<link rel="shortcut icon" href="{pboot:sitepath}/favicon.ico" type="image/x-icon">
 	<script src="{pboot:sitetplpath}/js/jquery-1.12.4.min.js"></script>
 </head>
@@ -39,12 +39,24 @@
         <li><a href="{pboot:sitepath}/" {pboot:if(0=='{sort:scode}')}class="active"{/pboot:if}>首页</a></li>
         {pboot:nav num=15 parent=0}
         <li>
+            {pboot:if([nav:soncount]>0)}
+            {pboot:2if('[nav:scode]'=='{sort:tcode}')}
+            <a href="javascript:void(0);" class="nav-parent active" aria-disabled="true">[nav:name]</a>
+            {2else}
+            <a href="javascript:void(0);" class="nav-parent" aria-disabled="true">[nav:name]</a>
+            {/pboot:2if}
+            {else}
             <a href="[nav:link]" {pboot:if('[nav:scode]'=='{sort:tcode}')}class="active"{/pboot:if}>[nav:name]</a>
+            {/pboot:if}
             {pboot:if([nav:soncount]>0)}
             <ul class="sub-menu">
                 {pboot:2nav parent=[nav:scode]}
                 <li>
+                    {pboot:2if([2nav:soncount]>0)}
+                    <a href="javascript:void(0);" class="nav-parent" aria-disabled="true">[2nav:name]</a>
+                    {2else}
                     <a href="[2nav:link]">[2nav:name]</a>
+                    {/pboot:2if}
                     {pboot:2if([2nav:soncount]>0)}
                     <ul class="sub-menu">
                         {pboot:3nav parent=[2nav:scode]}

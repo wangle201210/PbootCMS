@@ -1,5 +1,5 @@
 {include file=comm/head.html}
-<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202606111445">
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=20260716">
 
 <!-- 主体内容 -->
 <div class="container">
@@ -18,11 +18,19 @@
             {/pboot:sort}
             <div class="sidebar-menu">
                 {pboot:nav num=20 parent={sort:tcode}}
+                {pboot:if([nav:soncount]>0)}
+                <a href="javascript:void(0);" class="nav-parent">[nav:name]</a>
+                {else}
                 <a href="[nav:link]" {pboot:if('[nav:scode]'=='{sort:scode}')}class="active"{/pboot:if}>[nav:name]</a>
+                {/pboot:if}
                 {pboot:if([nav:soncount]>0)}
                 <div class="sidebar-sub">
                     {pboot:2nav parent=[nav:scode]}
+                    {pboot:2if([2nav:soncount]>0)}
+                    <a href="javascript:void(0);" class="nav-parent">[2nav:name]</a>
+                    {2else}
                     <a href="[2nav:link]" {pboot:2if('[2nav:scode]'=='{sort:scode}')}class="active"{/pboot:2if}>[2nav:name]</a>
+                    {/pboot:2if}
                     {/pboot:2nav}
                 </div>
                 {/pboot:if}
