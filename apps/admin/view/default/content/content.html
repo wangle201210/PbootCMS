@@ -938,6 +938,14 @@ $("#pics_box").dragsort({
 	placeHolderTemplate: "<dl class='placeHolder'><dt></dt></dl>"
 });
 
+$(function() {
+	var sourceUrlItem = $("input[name='ext_source_url']").closest(".layui-form-item");
+	var sourceItem = $("input[name='source']").closest(".layui-form-item");
+	if (sourceUrlItem.length && sourceItem.length) {
+		sourceUrlItem.insertAfter(sourceItem);
+	}
+});
+
 function saveOrder() {
 	var data = $("#pics_box dl dt img").map(function() {
 		return $(this).data("url");
