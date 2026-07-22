@@ -311,6 +311,17 @@
     gap: 4px;
 }
 
+.article-source-link {
+    color: #0a7c68;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(10, 124, 104, 0.35);
+}
+
+.article-source-link:hover {
+    color: #075f50;
+    border-bottom-color: currentColor;
+}
+
 .article-body {
     padding: 24px;
     font-size: 15px;

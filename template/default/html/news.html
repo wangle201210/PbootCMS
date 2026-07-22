@@ -1,5 +1,5 @@
 {include file=comm/head.html}
-<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202607161445">
+<link rel="stylesheet" href="{pboot:sitetplpath}/css/yx-page.css?v=202607221650">
 
 <!-- 主体内容 -->
 <div class="container">
@@ -37,7 +37,7 @@
                     <h1>{content:title}</h1>
                     <div class="article-meta">
                         <span>发布时间：{content:date style=Y-m-d}</span>
-                        <span>来源：{content:source}</span>
+                        <span class="article-source">来源：{content:source}{pboot:if('{content:ext_source_url}'!='')} <a class="article-source-link" href="{content:ext_source_url}" target="_blank" rel="noopener noreferrer">原文链接</a>{/pboot:if}</span>
                         <span>浏览：{content:visits}次</span>
                     </div>
                 </div>
