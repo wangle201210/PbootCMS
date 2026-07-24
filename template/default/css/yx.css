@@ -790,6 +790,10 @@ a {
     background: linear-gradient(135deg, #fff, #fdf5f4);
 }
 
+.honor-section .scroll-inner {
+    gap: 30px;
+}
+
 .honor-item {
     flex-shrink: 0;
     height: 95px;
