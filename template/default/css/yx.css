@@ -738,7 +738,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 85px;
+    width: 100px;
     cursor: pointer;
     transition: transform 0.25s;
 }
